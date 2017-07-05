@@ -4,6 +4,7 @@ package com.company.panels;
 import com.company.classes.Olympiad;
 import com.company.classes.EduProgram;
 import com.company.classes.Faculty;
+import com.company.classes.University;
 import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.gui2.*;
@@ -19,10 +20,12 @@ public class FacultyPanel {
     public Faculty f;
     public boolean b;
     public ArrayList <Olympiad> olympiads;
+    public University university;
 
 
-    public FacultyPanel(MultiWindowTextGUI gui, Faculty f, ArrayList <Olympiad> olympiads)
+    public FacultyPanel(MultiWindowTextGUI gui, Faculty f, ArrayList <Olympiad> olympiads, University university)
     {
+        this.university = university;
         this.gui = gui;
         this.f = f;
         this.b = true;
@@ -119,7 +122,7 @@ public class FacultyPanel {
                     return;
                 }
                 EduProgram e = f.eduprograms.get(comboE.getSelectedIndex() - 1);
-                EduProgramPanel eduProgramPanel = new EduProgramPanel(gui, e, olympiads);
+                EduProgramPanel eduProgramPanel = new EduProgramPanel(gui, e, olympiads, f);
                 eduProgramPanel.process();
                 refresh(comboE, e.shortname);
                 Main.save();
@@ -131,7 +134,7 @@ public class FacultyPanel {
             @Override
             public void run() {
                 EduProgram e = new EduProgram();
-                EduProgramPanel eduProgramPanel = new EduProgramPanel(gui, e, olympiads);
+                EduProgramPanel eduProgramPanel = new EduProgramPanel(gui, e, olympiads, f);
                 eduProgramPanel.process();
                 if (eduProgramPanel.b)
                 {
@@ -152,6 +155,7 @@ public class FacultyPanel {
         exit_panel.addComponent(new Button("Сохранить и выйти", new Runnable() {
             @Override
             public void run() {
+                f.university = university;
                 f.shortname = txtshortname.getText();
                 f.name = txtname.getText();
                 f.info = txtabout.getText();

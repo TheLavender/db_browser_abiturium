@@ -2,6 +2,7 @@ package com.company.panels;
 
 import com.company.classes.Category;
 import com.company.classes.OlympEvent;
+import com.company.classes.Olympiad;
 import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.gui2.*;
@@ -21,9 +22,11 @@ public class OlympEventPanel {
     public MultiWindowTextGUI gui;
     public OlympEvent e;
     public boolean b;
+    public Olympiad olympiad;
 
-    public OlympEventPanel(MultiWindowTextGUI gui, OlympEvent e)
+    public OlympEventPanel(MultiWindowTextGUI gui, OlympEvent e, Olympiad olympiad)
     {
+        this.olympiad = olympiad;
         this.gui = gui;
         this.e = e;
         this.b = true;
@@ -138,6 +141,7 @@ public class OlympEventPanel {
                     MessageDialogButton err = MessageDialog.showMessageDialog(gui, "", "Проверьте формат даты: DD.MM.YYYY", MessageDialogButton.OK);
                     return;
                 }
+                e.olympiad = olympiad;
                 e.name = txtname.getText();
                 e.info = txtinfo.getText();
                 e.links = new ArrayList<String>();

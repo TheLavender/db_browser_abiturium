@@ -116,7 +116,7 @@ public class UniversityPanel {
                     return;
                 }
                 Faculty f = u.faculties.get(comboF.getSelectedIndex() - 1);
-                FacultyPanel F = new FacultyPanel(gui, f, olympiads);
+                FacultyPanel F = new FacultyPanel(gui, f, olympiads, u);
                 F.process();
                 refresh(comboF, f.shortname);
                 Main.save();
@@ -128,7 +128,7 @@ public class UniversityPanel {
             @Override
             public void run() {
                 Faculty f = new Faculty();
-                FacultyPanel facultyPanel = new FacultyPanel(gui, f, olympiads);
+                FacultyPanel facultyPanel = new FacultyPanel(gui, f, olympiads, u);
                 facultyPanel.process();
                 if (facultyPanel.b)
                 {

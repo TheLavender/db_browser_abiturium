@@ -1,5 +1,6 @@
 package com.company.panels;
 
+import com.company.classes.Faculty;
 import com.company.classes.Olympiad;
 import com.company.classes.EduProgram;
 import com.googlecode.lanterna.TerminalPosition;
@@ -15,9 +16,11 @@ public class EduProgramPanel
     public EduProgram e;
     public boolean b;
     public ArrayList <Olympiad> olympiads;
+    public Faculty faculty;
 
-    public EduProgramPanel(MultiWindowTextGUI gui, EduProgram e, ArrayList <Olympiad> olympiads)
+    public EduProgramPanel(MultiWindowTextGUI gui, EduProgram e, ArrayList <Olympiad> olympiads, Faculty faculty)
     {
+        this.faculty = faculty;
         this.gui = gui;
         this.e = e;
         this.b = true;
@@ -95,6 +98,7 @@ public class EduProgramPanel
                 e.name = txtname.getText();
                 e.info = txtabout.getText();
                 e.links = new ArrayList<String>();
+                e.faculty = faculty;
                 Scanner sc = new Scanner(txtlinks.getText());
                 while (sc.hasNextLine())
                 {

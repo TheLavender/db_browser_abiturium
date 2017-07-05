@@ -117,7 +117,7 @@ public class OlympiadPanel {
                     return;
                 }
                 OlympEvent e = o.events.get(comboE.getSelectedIndex() - 1);
-                OlympEventPanel olympEventPanel = new OlympEventPanel(gui, e);
+                OlympEventPanel olympEventPanel = new OlympEventPanel(gui, e, o);
                 olympEventPanel.process();
                 refresh(comboE, e.name);
                 Main.save();
@@ -129,7 +129,7 @@ public class OlympiadPanel {
             @Override
             public void run() {
                 OlympEvent e = new OlympEvent();
-                OlympEventPanel olympEventPanel = new OlympEventPanel(gui, e);
+                OlympEventPanel olympEventPanel = new OlympEventPanel(gui, e, o);
                 olympEventPanel.process();
                 if (olympEventPanel.b)
                 {
