@@ -10,6 +10,8 @@ import java.util.Calendar;
 
 public class OlympEvent
 {
+    public Olympiad olympiad;
+
     public Category cat;
     public String name;
     public String info;
@@ -24,6 +26,7 @@ public class OlympEvent
 
     public OlympEvent()
     {
+        olympiad = null;
         cat = null;
         name = "";
         info = "";

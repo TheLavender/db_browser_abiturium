@@ -3,7 +3,6 @@ package com.company.panels;
 import com.company.classes.Faculty;
 import com.company.classes.Olympiad;
 import com.company.classes.University;
-import com.company.panels.FacultyPanel;
 import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.gui2.*;
@@ -65,7 +64,7 @@ public class UniversityPanel {
 
         main_panel.addComponent(new Label("Описание"));
         TextBox txtabout = new TextBox(new TerminalSize(30, 3));
-        txtabout.setText(u.about);
+        txtabout.setText(u.info);
         main_panel.addComponent(txtabout);
 
         main_panel.addComponent(new EmptySpace());
@@ -152,7 +151,7 @@ public class UniversityPanel {
             public void run() {
                 u.shortname = txtshortname.getText();
                 u.name = txtname.getText();
-                u.about = txtabout.getText();
+                u.info = txtabout.getText();
                 u.links = new ArrayList<String>();
                 Scanner sc = new Scanner(txtlinks.getText());
                 while (sc.hasNextLine())

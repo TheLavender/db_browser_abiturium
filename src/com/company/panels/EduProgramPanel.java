@@ -47,7 +47,7 @@ public class EduProgramPanel
 
         main_panel.addComponent(new Label("Описание"));
         TextBox txtabout = new TextBox(new TerminalSize(30, 3));
-        txtabout.setText(e.about);
+        txtabout.setText(e.info);
         main_panel.addComponent(txtabout);
 
         main_panel.addComponent(new EmptySpace());
@@ -93,7 +93,7 @@ public class EduProgramPanel
             public void run() {
                 e.shortname = txtshortname.getText();
                 e.name = txtname.getText();
-                e.about = txtabout.getText();
+                e.info = txtabout.getText();
                 e.links = new ArrayList<String>();
                 Scanner sc = new Scanner(txtlinks.getText());
                 while (sc.hasNextLine())

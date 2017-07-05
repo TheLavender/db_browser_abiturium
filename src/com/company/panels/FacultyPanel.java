@@ -66,7 +66,7 @@ public class FacultyPanel {
 
         main_panel.addComponent(new Label("Описание"));
         TextBox txtabout = new TextBox(new TerminalSize(30, 3));
-        txtabout.setText(f.about);
+        txtabout.setText(f.info);
         main_panel.addComponent(txtabout);
 
         main_panel.addComponent(new EmptySpace());
@@ -154,7 +154,7 @@ public class FacultyPanel {
             public void run() {
                 f.shortname = txtshortname.getText();
                 f.name = txtname.getText();
-                f.about = txtabout.getText();
+                f.info = txtabout.getText();
                 f.links = new ArrayList<String>();
                 Scanner sc = new Scanner(txtlinks.getText());
                 while (sc.hasNextLine())
