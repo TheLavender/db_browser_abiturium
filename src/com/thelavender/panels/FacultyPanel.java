@@ -1,41 +1,45 @@
-package com.company.panels;
+package com.thelavender.panels;
 
 
-import com.company.classes.Subject;
-import com.company.classes.OlympEvent;
-import com.company.classes.Olympiad;
 import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.gui2.*;
 import com.googlecode.lanterna.gui2.dialogs.MessageDialog;
 import com.googlecode.lanterna.gui2.dialogs.MessageDialogButton;
+import com.thelavender.abiturium_utils.classes.EduProgram;
+import com.thelavender.abiturium_utils.classes.Faculty;
+import com.thelavender.abiturium_utils.classes.Olympiad;
+import com.thelavender.abiturium_utils.classes.University;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
-
-public class OlympiadPanel {
+public class FacultyPanel {
 
     public MultiWindowTextGUI gui;
-    public Olympiad o;
+    public Faculty f;
     public boolean b;
+    public ArrayList <Olympiad> olympiads;
+    public University university;
 
-    public OlympiadPanel(MultiWindowTextGUI gui, Olympiad o)
+
+    public FacultyPanel(MultiWindowTextGUI gui, Faculty f, ArrayList <Olympiad> olympiads, University university)
     {
+        this.university = university;
         this.gui = gui;
-        this.o = o;
+        this.f = f;
         this.b = true;
+        this.olympiads = olympiads;
     }
 
-    public void refresh(ComboBox<String> combo, String name)
+    public void refresh(ComboBox <String> combo, String shortname)
     {
         combo.clearItems();
         combo.addItem("---Выберите---");
-        for (int i = 0; i < o.events.size(); ++i)
+        for (int i = 0; i < f.eduPrograms.size(); ++i)
         {
-            combo.addItem(o.events.get(i).toString());
-            if (o.events.get(i).toString().equals(name))
+            combo.addItem(f.eduPrograms.get(i).shortname);
+            if (f.eduPrograms.get(i).shortname.equals(shortname))
             {
                 combo.setSelectedIndex(i + 1);
             }
@@ -51,38 +55,39 @@ public class OlympiadPanel {
 
         main_panel.addComponent(new Label("Краткое название"));
         TextBox txtshortname = new TextBox(new TerminalSize(30, 1));
-        txtshortname.setText(o.shortname);
+        txtshortname.setText(f.shortname);
         main_panel.addComponent(txtshortname);
 
         main_panel.addComponent(new EmptySpace());
 
         main_panel.addComponent(new Label("Название"));
         TextBox txtname = new TextBox(new TerminalSize(30, 1));
-        txtname.setText(o.name);
+        txtname.setText(f.name);
         main_panel.addComponent(txtname);
 
         main_panel.addComponent(new EmptySpace());
 
         main_panel.addComponent(new Label("Описание"));
         TextBox txtabout = new TextBox(new TerminalSize(30, 3));
-        txtabout.setText(o.info);
+        txtabout.setText(f.info);
         main_panel.addComponent(txtabout);
 
         main_panel.addComponent(new EmptySpace());
 
         main_panel.addComponent(new Label("Ссылки"));
         TextBox txtlinks = new TextBox(new TerminalSize(30, 4));
+
         StringBuffer links = new StringBuffer("");
-        for (int i = 0; i < o.links.size(); ++i)
+        for (int i = 0; i < f.links.size(); ++i)
         {
             if (i != 0) links.append("\n");
-            links.append(o.links.get(i));
+            links.append(f.links.get(i));
         }
         txtlinks.setText(String.valueOf(links));
+
         main_panel.addComponent(txtlinks);
 
         main_panel.addComponent(new EmptySpace());
-        main_panel.addComponent(new Label("События"));
 
         ComboBox <String> comboE = new ComboBox<String>();
         refresh(comboE, "---Выберите---");
@@ -104,60 +109,41 @@ public class OlympiadPanel {
                 {
                     return;
                 }
-                o.events.remove(comboE.getSelectedIndex() - 1);
+                f.eduPrograms.remove(comboE.getSelectedIndex() - 1);
                 refresh(comboE, "---Выберите---");
             }
         }));
 
-        additional_panel.addComponent(new Button("Перейти", new Runnable() {
+        main_panel.addComponent(new Button("Перейти", new Runnable() {
             @Override
             public void run() {
                 if (comboE.getSelectedIndex() == 0)
                 {
                     return;
                 }
-                OlympEvent e = o.events.get(comboE.getSelectedIndex() - 1);
-                OlympEventPanel olympEventPanel = new OlympEventPanel(gui, e, o);
-                olympEventPanel.process();
-                refresh(comboE, e.name);
+                EduProgram e = f.eduPrograms.get(comboE.getSelectedIndex() - 1);
+                EduProgramPanel eduProgramPanel = new EduProgramPanel(gui, e, olympiads, f);
+                eduProgramPanel.process();
+                refresh(comboE, e.shortname);
                 Main.save();
             }
         }));
 
 
-        main_panel.addComponent(new Button("Добавить событие", new Runnable() {
+        main_panel.addComponent(new Button("Добавить программу", new Runnable() {
             @Override
             public void run() {
-                OlympEvent e = new OlympEvent();
-                OlympEventPanel olympEventPanel = new OlympEventPanel(gui, e, o);
-                olympEventPanel.process();
-                if (olympEventPanel.b)
+                EduProgram e = new EduProgram();
+                EduProgramPanel eduProgramPanel = new EduProgramPanel(gui, e, olympiads, f);
+                eduProgramPanel.process();
+                if (eduProgramPanel.b)
                 {
-                    o.events.add(e);
-                    refresh(comboE, e.name);
+                    f.eduPrograms.add(e);
+                    refresh(comboE, e.shortname);
                     Main.save();
                 }
             }
         }));
-
-        main_panel.addComponent(new EmptySpace());
-        main_panel.addComponent(new Label("Предметы"));
-        CheckBoxList<Subject> checkS = new CheckBoxList<Subject>(new TerminalSize(30, 8));
-        ArrayList<Subject> sub = new ArrayList<Subject>(Arrays.asList(Subject.values()));
-        for (int i = 0; i < sub.size(); ++i)
-        {
-            checkS.addItem(sub.get(i));
-        }
-        for (int i = 0; i < o.subjects.size(); ++i)
-        {
-            checkS.setChecked(o.subjects.get(i), true);
-        }
-        main_panel.addComponent(checkS);
-
-        //ComboBox <String> comboS = new ComboBox<String>();
-        //refresh(comboS, "---Выберите---");
-        //main_panel.addComponent(comboS);
-
 
         BasicWindow window = new BasicWindow();
 
@@ -169,26 +155,15 @@ public class OlympiadPanel {
         exit_panel.addComponent(new Button("Сохранить и выйти", new Runnable() {
             @Override
             public void run() {
-                o.shortname = txtshortname.getText();
-                o.name = txtname.getText();
-                o.info = txtabout.getText();
-                o.links = new ArrayList<String>();
-                o.subjects = new ArrayList<Subject>();
+                f.university = university;
+                f.shortname = txtshortname.getText();
+                f.name = txtname.getText();
+                f.info = txtabout.getText();
+                f.links = new ArrayList<String>();
                 Scanner sc = new Scanner(txtlinks.getText());
                 while (sc.hasNextLine())
                 {
-                    o.links.add(new String(sc.nextLine()));
-                }
-                ArrayList<Subject> result = new ArrayList<Subject>(checkS.getCheckedItems());
-                for (int i = 0; i < result.size(); ++i)
-                {
-                    for (int j = 0; j < sub.size(); ++j)
-                    {
-                        if (result.get(i) == sub.get(j))
-                        {
-                            o.subjects.add(sub.get(j));
-                        }
-                    }
+                    f.links.add(new String(sc.nextLine()));
                 }
                 b = true;
                 gui.removeWindow(window);

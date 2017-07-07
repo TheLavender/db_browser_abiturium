@@ -1,11 +1,10 @@
-package com.company.classes;
+package com.thelavender.classes;
 
 
-import com.company.classes.DataB;
-import com.company.panels.Main;
 import com.db4o.Db4oEmbedded;
 import com.db4o.ObjectContainer;
 import com.db4o.config.EmbeddedConfiguration;
+import com.thelavender.abiturium_utils.classes.DataB;
 
 public class SetNewDataBase {
     public String res = null;

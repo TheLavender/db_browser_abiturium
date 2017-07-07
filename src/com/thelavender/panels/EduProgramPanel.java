@@ -1,11 +1,11 @@
-package com.company.panels;
+package com.thelavender.panels;
 
-import com.company.classes.Faculty;
-import com.company.classes.Olympiad;
-import com.company.classes.EduProgram;
 import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.gui2.*;
+import com.thelavender.abiturium_utils.classes.EduProgram;
+import com.thelavender.abiturium_utils.classes.Faculty;
+import com.thelavender.abiturium_utils.classes.Olympiad;
 
 import java.util.ArrayList;
 import java.util.Scanner;

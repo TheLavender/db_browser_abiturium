@@ -1,33 +1,28 @@
-package com.company.panels;
+package com.thelavender.panels;
 
-
-import com.company.classes.Olympiad;
-import com.company.classes.EduProgram;
-import com.company.classes.Faculty;
-import com.company.classes.University;
 import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.gui2.*;
 import com.googlecode.lanterna.gui2.dialogs.MessageDialog;
 import com.googlecode.lanterna.gui2.dialogs.MessageDialogButton;
+import com.thelavender.abiturium_utils.classes.Faculty;
+import com.thelavender.abiturium_utils.classes.Olympiad;
+import com.thelavender.abiturium_utils.classes.University;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class FacultyPanel {
+public class UniversityPanel {
 
     public MultiWindowTextGUI gui;
-    public Faculty f;
+    public University u;
     public boolean b;
     public ArrayList <Olympiad> olympiads;
-    public University university;
 
-
-    public FacultyPanel(MultiWindowTextGUI gui, Faculty f, ArrayList <Olympiad> olympiads, University university)
+    public UniversityPanel(MultiWindowTextGUI gui, University u, ArrayList <Olympiad> olympiads)
     {
-        this.university = university;
         this.gui = gui;
-        this.f = f;
+        this.u = u;
         this.b = true;
         this.olympiads = olympiads;
     }
@@ -36,10 +31,10 @@ public class FacultyPanel {
     {
         combo.clearItems();
         combo.addItem("---Выберите---");
-        for (int i = 0; i < f.eduprograms.size(); ++i)
+        for (int i = 0; i < u.faculties.size(); ++i)
         {
-            combo.addItem(f.eduprograms.get(i).shortname);
-            if (f.eduprograms.get(i).shortname.equals(shortname))
+            combo.addItem(u.faculties.get(i).shortname);
+            if (u.faculties.get(i).shortname.equals(shortname))
             {
                 combo.setSelectedIndex(i + 1);
             }
@@ -55,43 +50,42 @@ public class FacultyPanel {
 
         main_panel.addComponent(new Label("Краткое название"));
         TextBox txtshortname = new TextBox(new TerminalSize(30, 1));
-        txtshortname.setText(f.shortname);
+        txtshortname.setText(u.shortname);
         main_panel.addComponent(txtshortname);
 
         main_panel.addComponent(new EmptySpace());
 
         main_panel.addComponent(new Label("Название"));
         TextBox txtname = new TextBox(new TerminalSize(30, 1));
-        txtname.setText(f.name);
+        txtname.setText(u.name);
         main_panel.addComponent(txtname);
 
         main_panel.addComponent(new EmptySpace());
 
         main_panel.addComponent(new Label("Описание"));
         TextBox txtabout = new TextBox(new TerminalSize(30, 3));
-        txtabout.setText(f.info);
+        txtabout.setText(u.info);
         main_panel.addComponent(txtabout);
 
         main_panel.addComponent(new EmptySpace());
 
         main_panel.addComponent(new Label("Ссылки"));
         TextBox txtlinks = new TextBox(new TerminalSize(30, 4));
-
         StringBuffer links = new StringBuffer("");
-        for (int i = 0; i < f.links.size(); ++i)
+        for (int i = 0; i < u.links.size(); ++i)
         {
             if (i != 0) links.append("\n");
-            links.append(f.links.get(i));
+            links.append(u.links.get(i));
         }
         txtlinks.setText(String.valueOf(links));
-
         main_panel.addComponent(txtlinks);
 
         main_panel.addComponent(new EmptySpace());
 
-        ComboBox <String> comboE = new ComboBox<String>();
-        refresh(comboE, "---Выберите---");
-        main_panel.addComponent(comboE);
+        ComboBox <String> comboF = new ComboBox<String>();
+        refresh(comboF, "---Выберите---");
+        main_panel.addComponent(comboF);
+
 
         Panel additional_panel = new Panel();
         additional_panel.setLayoutManager(new GridLayout(2));
@@ -100,7 +94,7 @@ public class FacultyPanel {
         additional_panel.addComponent(new Button("Удалить", new Runnable() {
             @Override
             public void run() {
-                if (comboE.getSelectedIndex() == 0)
+                if (comboF.getSelectedIndex() == 0)
                 {
                     return;
                 }
@@ -109,37 +103,37 @@ public class FacultyPanel {
                 {
                     return;
                 }
-                f.eduprograms.remove(comboE.getSelectedIndex() - 1);
-                refresh(comboE, "---Выберите---");
+                u.faculties.remove(comboF.getSelectedIndex() - 1);
+                refresh(comboF, "---Выберите---");
             }
         }));
 
-        main_panel.addComponent(new Button("Перейти", new Runnable() {
+        additional_panel.addComponent(new Button("Перейти", new Runnable() {
             @Override
             public void run() {
-                if (comboE.getSelectedIndex() == 0)
+                if (comboF.getSelectedIndex() == 0)
                 {
                     return;
                 }
-                EduProgram e = f.eduprograms.get(comboE.getSelectedIndex() - 1);
-                EduProgramPanel eduProgramPanel = new EduProgramPanel(gui, e, olympiads, f);
-                eduProgramPanel.process();
-                refresh(comboE, e.shortname);
+                Faculty f = u.faculties.get(comboF.getSelectedIndex() - 1);
+                FacultyPanel F = new FacultyPanel(gui, f, olympiads, u);
+                F.process();
+                refresh(comboF, f.shortname);
                 Main.save();
             }
         }));
 
 
-        main_panel.addComponent(new Button("Добавить программу", new Runnable() {
+        main_panel.addComponent(new Button("Добавить факультет", new Runnable() {
             @Override
             public void run() {
-                EduProgram e = new EduProgram();
-                EduProgramPanel eduProgramPanel = new EduProgramPanel(gui, e, olympiads, f);
-                eduProgramPanel.process();
-                if (eduProgramPanel.b)
+                Faculty f = new Faculty();
+                FacultyPanel facultyPanel = new FacultyPanel(gui, f, olympiads, u);
+                facultyPanel.process();
+                if (facultyPanel.b)
                 {
-                    f.eduprograms.add(e);
-                    refresh(comboE, e.shortname);
+                    u.faculties.add(f);
+                    refresh(comboF, f.shortname);
                     Main.save();
                 }
             }
@@ -155,15 +149,14 @@ public class FacultyPanel {
         exit_panel.addComponent(new Button("Сохранить и выйти", new Runnable() {
             @Override
             public void run() {
-                f.university = university;
-                f.shortname = txtshortname.getText();
-                f.name = txtname.getText();
-                f.info = txtabout.getText();
-                f.links = new ArrayList<String>();
+                u.shortname = txtshortname.getText();
+                u.name = txtname.getText();
+                u.info = txtabout.getText();
+                u.links = new ArrayList<String>();
                 Scanner sc = new Scanner(txtlinks.getText());
                 while (sc.hasNextLine())
                 {
-                    f.links.add(new String(sc.nextLine()));
+                    u.links.add(new String(sc.nextLine()));
                 }
                 b = true;
                 gui.removeWindow(window);

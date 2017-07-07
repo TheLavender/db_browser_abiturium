@@ -1,7 +1,7 @@
 <component name="libraryTable">
-  <library name="lanterna-3.0.0-rc1">
+  <library name="abiturium_utils">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/libs/lanterna-3.0.0-rc1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/abiturium_utils.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

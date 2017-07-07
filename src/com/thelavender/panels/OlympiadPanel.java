@@ -1,40 +1,41 @@
-package com.company.panels;
+package com.thelavender.panels;
 
-import com.company.classes.Faculty;
-import com.company.classes.Olympiad;
-import com.company.classes.University;
+
 import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.gui2.*;
 import com.googlecode.lanterna.gui2.dialogs.MessageDialog;
 import com.googlecode.lanterna.gui2.dialogs.MessageDialogButton;
+import com.thelavender.abiturium_utils.classes.OlympEvent;
+import com.thelavender.abiturium_utils.classes.Olympiad;
+import com.thelavender.abiturium_utils.enums.Subject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
-public class UniversityPanel {
+
+public class OlympiadPanel {
 
     public MultiWindowTextGUI gui;
-    public University u;
+    public Olympiad o;
     public boolean b;
-    public ArrayList <Olympiad> olympiads;
 
-    public UniversityPanel(MultiWindowTextGUI gui, University u, ArrayList <Olympiad> olympiads)
+    public OlympiadPanel(MultiWindowTextGUI gui, Olympiad o)
     {
         this.gui = gui;
-        this.u = u;
+        this.o = o;
         this.b = true;
-        this.olympiads = olympiads;
     }
 
-    public void refresh(ComboBox <String> combo, String shortname)
+    public void refresh(ComboBox<String> combo, String name)
     {
         combo.clearItems();
         combo.addItem("---Выберите---");
-        for (int i = 0; i < u.faculties.size(); ++i)
+        for (int i = 0; i < o.events.size(); ++i)
         {
-            combo.addItem(u.faculties.get(i).shortname);
-            if (u.faculties.get(i).shortname.equals(shortname))
+            combo.addItem(o.events.get(i).toString());
+            if (o.events.get(i).toString().equals(name))
             {
                 combo.setSelectedIndex(i + 1);
             }
@@ -50,21 +51,21 @@ public class UniversityPanel {
 
         main_panel.addComponent(new Label("Краткое название"));
         TextBox txtshortname = new TextBox(new TerminalSize(30, 1));
-        txtshortname.setText(u.shortname);
+        txtshortname.setText(o.shortname);
         main_panel.addComponent(txtshortname);
 
         main_panel.addComponent(new EmptySpace());
 
         main_panel.addComponent(new Label("Название"));
         TextBox txtname = new TextBox(new TerminalSize(30, 1));
-        txtname.setText(u.name);
+        txtname.setText(o.name);
         main_panel.addComponent(txtname);
 
         main_panel.addComponent(new EmptySpace());
 
         main_panel.addComponent(new Label("Описание"));
         TextBox txtabout = new TextBox(new TerminalSize(30, 3));
-        txtabout.setText(u.info);
+        txtabout.setText(o.info);
         main_panel.addComponent(txtabout);
 
         main_panel.addComponent(new EmptySpace());
@@ -72,20 +73,20 @@ public class UniversityPanel {
         main_panel.addComponent(new Label("Ссылки"));
         TextBox txtlinks = new TextBox(new TerminalSize(30, 4));
         StringBuffer links = new StringBuffer("");
-        for (int i = 0; i < u.links.size(); ++i)
+        for (int i = 0; i < o.links.size(); ++i)
         {
             if (i != 0) links.append("\n");
-            links.append(u.links.get(i));
+            links.append(o.links.get(i));
         }
         txtlinks.setText(String.valueOf(links));
         main_panel.addComponent(txtlinks);
 
         main_panel.addComponent(new EmptySpace());
+        main_panel.addComponent(new Label("События"));
 
-        ComboBox <String> comboF = new ComboBox<String>();
-        refresh(comboF, "---Выберите---");
-        main_panel.addComponent(comboF);
-
+        ComboBox <String> comboE = new ComboBox<String>();
+        refresh(comboE, "---Выберите---");
+        main_panel.addComponent(comboE);
 
         Panel additional_panel = new Panel();
         additional_panel.setLayoutManager(new GridLayout(2));
@@ -94,7 +95,7 @@ public class UniversityPanel {
         additional_panel.addComponent(new Button("Удалить", new Runnable() {
             @Override
             public void run() {
-                if (comboF.getSelectedIndex() == 0)
+                if (comboE.getSelectedIndex() == 0)
                 {
                     return;
                 }
@@ -103,41 +104,60 @@ public class UniversityPanel {
                 {
                     return;
                 }
-                u.faculties.remove(comboF.getSelectedIndex() - 1);
-                refresh(comboF, "---Выберите---");
+                o.events.remove(comboE.getSelectedIndex() - 1);
+                refresh(comboE, "---Выберите---");
             }
         }));
 
         additional_panel.addComponent(new Button("Перейти", new Runnable() {
             @Override
             public void run() {
-                if (comboF.getSelectedIndex() == 0)
+                if (comboE.getSelectedIndex() == 0)
                 {
                     return;
                 }
-                Faculty f = u.faculties.get(comboF.getSelectedIndex() - 1);
-                FacultyPanel F = new FacultyPanel(gui, f, olympiads, u);
-                F.process();
-                refresh(comboF, f.shortname);
+                OlympEvent e = o.events.get(comboE.getSelectedIndex() - 1);
+                OlympEventPanel olympEventPanel = new OlympEventPanel(gui, e, o);
+                olympEventPanel.process();
+                refresh(comboE, e.name);
                 Main.save();
             }
         }));
 
 
-        main_panel.addComponent(new Button("Добавить факультет", new Runnable() {
+        main_panel.addComponent(new Button("Добавить событие", new Runnable() {
             @Override
             public void run() {
-                Faculty f = new Faculty();
-                FacultyPanel facultyPanel = new FacultyPanel(gui, f, olympiads, u);
-                facultyPanel.process();
-                if (facultyPanel.b)
+                OlympEvent e = new OlympEvent();
+                OlympEventPanel olympEventPanel = new OlympEventPanel(gui, e, o);
+                olympEventPanel.process();
+                if (olympEventPanel.b)
                 {
-                    u.faculties.add(f);
-                    refresh(comboF, f.shortname);
+                    o.events.add(e);
+                    refresh(comboE, e.name);
                     Main.save();
                 }
             }
         }));
+
+        main_panel.addComponent(new EmptySpace());
+        main_panel.addComponent(new Label("Предметы"));
+        CheckBoxList<Subject> checkS = new CheckBoxList<Subject>(new TerminalSize(30, 8));
+        ArrayList<Subject> sub = new ArrayList<Subject>(Arrays.asList(Subject.values()));
+        for (int i = 0; i < sub.size(); ++i)
+        {
+            checkS.addItem(sub.get(i));
+        }
+        for (int i = 0; i < o.subjects.size(); ++i)
+        {
+            checkS.setChecked(o.subjects.get(i), true);
+        }
+        main_panel.addComponent(checkS);
+
+        //ComboBox <String> comboS = new ComboBox<String>();
+        //refresh(comboS, "---Выберите---");
+        //main_panel.addComponent(comboS);
+
 
         BasicWindow window = new BasicWindow();
 
@@ -149,14 +169,26 @@ public class UniversityPanel {
         exit_panel.addComponent(new Button("Сохранить и выйти", new Runnable() {
             @Override
             public void run() {
-                u.shortname = txtshortname.getText();
-                u.name = txtname.getText();
-                u.info = txtabout.getText();
-                u.links = new ArrayList<String>();
+                o.shortname = txtshortname.getText();
+                o.name = txtname.getText();
+                o.info = txtabout.getText();
+                o.links = new ArrayList<String>();
+                o.subjects = new ArrayList<Subject>();
                 Scanner sc = new Scanner(txtlinks.getText());
                 while (sc.hasNextLine())
                 {
-                    u.links.add(new String(sc.nextLine()));
+                    o.links.add(new String(sc.nextLine()));
+                }
+                ArrayList<Subject> result = new ArrayList<Subject>(checkS.getCheckedItems());
+                for (int i = 0; i < result.size(); ++i)
+                {
+                    for (int j = 0; j < sub.size(); ++j)
+                    {
+                        if (result.get(i) == sub.get(j))
+                        {
+                            o.subjects.add(sub.get(j));
+                        }
+                    }
                 }
                 b = true;
                 gui.removeWindow(window);

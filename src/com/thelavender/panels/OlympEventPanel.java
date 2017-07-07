@@ -1,8 +1,6 @@
-package com.company.panels;
+package com.thelavender.panels;
 
-import com.company.classes.Category;
-import com.company.classes.OlympEvent;
-import com.company.classes.Olympiad;
+
 import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.gui2.*;
@@ -12,6 +10,9 @@ import com.googlecode.lanterna.gui2.Label;
 import com.googlecode.lanterna.gui2.Panel;
 import com.googlecode.lanterna.gui2.dialogs.MessageDialog;
 import com.googlecode.lanterna.gui2.dialogs.MessageDialogButton;
+import com.thelavender.abiturium_utils.classes.OlympEvent;
+import com.thelavender.abiturium_utils.classes.Olympiad;
+import com.thelavender.abiturium_utils.enums.Category;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

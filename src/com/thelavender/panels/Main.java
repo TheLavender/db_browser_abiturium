@@ -1,6 +1,5 @@
-package com.company.panels;
+package com.thelavender.panels;
 
-import com.company.classes.*;
 import com.db4o.Db4oEmbedded;
 import com.db4o.ObjectContainer;
 import com.db4o.config.EmbeddedConfiguration;
@@ -14,6 +13,8 @@ import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
+import com.thelavender.abiturium_utils.classes.*;
+import com.thelavender.classes.SetNewDataBase;
 
 import java.io.IOException;
 import java.nio.file.Files;
